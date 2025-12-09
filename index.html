@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PillTrackADHS – Deine einfache ADHS‑Protokoll‑App</title>
+  <meta name="description" content="PillTrackADHS ist eine private, einfache App zum Protokollieren von Medikamenteneinnahmen und Tagesverlauf bei ADHS. Daten bleiben lokal. Export/Import inklusive." />
+  <meta name="author" content="Thomas Schwarz" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="PillTrackADHS – ADHS‑Protokoll‑App" />
+  <meta property="og:description" content="Protokolliere Einnahmen, Wirkung, Rebound und Schlaf. Alles lokal auf deinem Gerät. Dark Mode, Export/Import." />
+  <meta property="og:image" content="https://example.com/cover.png" />
+  <meta property="og:locale" content="de_AT" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💊</text></svg>">
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --bg2:#11131a;
+      --text:#e9ecf1;
+      --muted:#9aa3b2;
+      --brand:#30d158; /* iOS green vibe */
+      --card:#171a22;
+      --border:#222736;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --maxw:1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fa;
+        --bg2:#ffffff;
+        --text:#121417;
+        --muted:#4b5563;
+        --brand:#15803d;
+        --card:#ffffff;
+        --border:#e5e7eb;
+        --shadow: 0 10px 30px rgba(0,0,0,.06);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji}
+    a{color:var(--brand);text-decoration:none}
+    a:focus,button:focus{outline:2px solid var(--brand);outline-offset:2px}
+    img{max-width:100%;display:block}
+    header{position:sticky;top:0;backdrop-filter:saturate(180%) blur(10px);background:color-mix(in oklab, var(--bg2) 75%, transparent);border-bottom:1px solid var(--border);z-index:10}
+    .nav{display:flex;gap:18px;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:0 auto;padding:14px 20px}
+    .nav a.logo{display:flex;gap:10px;align-items:center;color:var(--text);font-weight:700}
+    .pill{width:28px;height:28px;border-radius:14px;background:linear-gradient(135deg,#34d399 0%,#10b981 100%);display:grid;place-items:center;color:white;font-size:18px}
+    .links a{color:var(--text);opacity:.8}
+    .links a:hover{opacity:1}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding:48px 0}
+    .badge{display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
+    h1{font-size:clamp(25px,3.2vw,40px);line-height:1.15;margin:12px 0 10px}
+    p.lead{font-size:clamp(16px,1.6vw,20px);color:var(--muted);margin:0 0 14px}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    .btn{border:1px solid var(--border);background:var(--card);padding:12px 16px;border-radius:12px;color:var(--text);font-weight:600;box-shadow:var(--shadow);}
+    .btn.primary{background:var(--brand);border-color:transparent;color:#0b1610}
+    .mock{border:1px solid var(--border);border-radius:24px;background:var(--card);padding:16px;box-shadow:var(--shadow)}
+    .grid{display:grid;gap:18px}
+    .features{grid-template-columns:repeat(3,minmax(0,1fr));margin:40px 0}
+    .card{border:1px solid var(--border);background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .card h3{margin:4px 0 8px}
+    .kicker{font-size:14px;color:var(--muted);letter-spacing:.02em;text-transform:uppercase}
+    section{padding:34px 0}
+    .screens{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .tag{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted)}
+    footer{border-top:1px solid var(--border);background:var(--bg2);padding:28px 0;margin-top:40px}
+    .small{font-size:14px;color:var(--muted)}
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+      .features,.screens{grid-template-columns:1fr}
+    }
+    /* Anchor offset for sticky header */
+    .anchor{scroll-margin-top:80px}
+    /* simple section dividers */
+    .divider{height:1px;background:var(--border);margin:26px 0}
+  </style>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PillTrackADHS",
+    "operatingSystem": "Android",
+    "applicationCategory": "HealthApplication",
+    "description": "Private, einfache App zum Protokollieren von Medikamenteneinnahme, Wirkung, Rebound und Schlaf bei ADHS.",
+    "creator": { "@type": "Person", "name": "Thomas Schwarz" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <a class="logo" href="#top"><span class="pill">💊</span> PillTrackADHS</a>
+      <div class="links" role="navigation" aria-label="Hauptnavigation">
+        <a href="#features">Funktionen</a> |
+        <a href="#screenshots">Screens</a> |
+        <a href="#how">So funktioniert’s</a> |
+        <a href="#privacy">Datenschutz</a> |
+        <a href="#faq">FAQ</a> |
+        <a href="#contact">Kontakt</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero anchor" aria-labelledby="hero-title">
+      <div>
+        <span class="badge">Lokal • kein Konto • kein Abo</span>
+        <h1 id="hero-title">Protokollieren ohne Aufwand.<br/>Mehr Überblick bei ADHS.</h1>
+        <p class="lead">
+          PillTrack hilft dir, Einnahmen, Dosis, Wirkung und andere Notizen kurz festzuhalten –
+          damit du Muster erkennst und Gespräche mit Ärzt:innen leichter werden.
+        </p>
+        <div class="cta">
+          <a class="btn primary" href="#how">So funktioniert´s</a>
+          <a class="btn" href="#privacy">Datenschutz</a>
+        </div>
+        <p class="small" style="margin-top:10px">Hinweis: Keine medizinische Beratung. Sprich Änderungen immer mit Fachpersonal ab.</p>
+      </div>
+      <div class="mock">
+        <img alt="App-Vorschau" src="/AppIcon.png">
+      </div>
+    </section>
+
+    <section id="features" class="anchor">
+      <h2>Funktionen</h2>
+      <div class="grid features">
+        <div class="card">
+          <div class="kicker">Protokoll</div>
+          <h3>Einnahmen &amp; Wirkung</h3>
+          <p>Medikament, Dosis, Retard/IR, Wirkung, Positives/Negatives, Rebound, Schlaf – schnell getippt.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">Planen und Erinnern</div>
+          <h3>Erstelle Erinnerungen</h3>
+          <p>Lass dich benachrichtigen wenn es zeit ist dein Mediakament einzunehmen.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">Wirkung</div>
+          <h3>Wirkungsindikator</h3>
+          <p>Sieh wann und wie lange dein Mediakment wirken wird.* Mit oder Ohne Benachrichtigung.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">ADHS Datenbank</div>
+          <h3>Bestehende Datenbank</h3>
+          <p>Wähle ADHS Medikamente aus einer bereits bestehenden Datenbank befüllt mit Marken und Infos.*</p>
+        </div>
+        <div class="card">
+          <div class="kicker">PDF Export</div>
+          <h3>Einträge gezielt Exportieren </h3>
+          <p>Ausgewählte Einträge, Tages- oder Monastslisten. Als PDF Dokument für dich oder deinen Arzt.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">Daten</div>
+          <h3> Backup Export &amp; Import</h3>
+          <p>JSON‑Export einzelner Datenbanken oder als ZIP. Ideal für Backups.</p>
+        </div>
+      </div>
+      <p class="small">Technik: Flutter für iOS und Android, Dark Mode, Light Mode, lokale Speicherung. </p>
+      <p class="small">* Daten vorerst nur für D,A und CH nach stand 2025 ausschließlich aus öffentlichen Quellen </p>
+    </section>
+
+    
+    
+    <div class="divider" role="presentation"></div>
+
+    <section id="screenshots" class="anchor">
+      <h2>Screenshots</h2>
+      <div class="grid screens">
+        <div class="card"><img alt="Screenshot 1 Platzhalter" src="/Screenshot_list.png"/></div>
+        <div class="card"><img alt="Screenshot 2 Platzhalter" src="/Screenshot_Details.png"/></div>
+        <div class="card"><img alt="Screenshot 3 Platzhalter" src="/Screenshot_erinnerung.png"/></div>
+      </div>
+    </section>
+
+    <section id="how" class="anchor">
+      <h2>So funktioniert’s</h2>
+      <ol>
+        <li>Medikament anlegen: aus der Datenbank oder manuell eintragen.  Dosis, Retard/IR wählen.</li>
+        <li>Eintrag anlegen: Datum, Uhrzeit, Medikament.</li>
+        <li>Optional Notizen wie zb.: Nüchtern oder mit Frühstück eingenommen, Wirkung, Rebound, Schlaf, Gedanken, etc</li>
+        <li>Wenn du willst, bekommst du auch eine Benachrichtigung sobald dein Medikament wirkt oder die Wirkung nachlässt.</li>
+            So kannst du die wirkung geziehlt Timen.
+        <li>Einnahme planen: Trage Erinnerungen für die einnahme deiner medikamente ein.</li>
+        
+      </ol>
+    </section>
+
+    <section id="privacy" class="anchor">
+      <h2>Datenschutz</h2>
+      <p><strong>Alle Daten werden lokal auf deinem Gerät gespeichert. Kein Konto, kein Server, keine Tracker.</strong></p>
+      <details class="card" style="margin-top:10px">
+        <summary><strong>Details</strong></summary>
+        <ul>
+          <li>Speicherort: Dokumente‑Ordner der App. Export als JSON/ZIP/PDF möglich.</li>
+          <li>Du entscheidest, ob du Backups teilst oder am Gerät behältst.</li>
+          <li>Bei App‑Entfernung werden lokale Daten mit gelöscht (sofern kein Backup oder Exporte erstellt wurden).</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="faq" class="anchor">
+      <h2>FAQ</h2>
+      <details class="card">
+        <summary><strong>Ist PillTrackADHS Medizinprodukt?</strong></summary>
+        <p><strong>Nein!</strong> PillTrackADHS ist ein Tagebuch/Tracker zur Selbstorganisation. Es ersetzt keine Diagnose, Beratung oder Therapie.</p>
+      </details>
+      <details class="card">
+        <summary><strong>Welche Medikamente sind in der App?</strong></summary>
+        <p>ADHS Medikamente die (nach Öffentlichen Quellen - stand 2025) in Deutschland, Österreich und der Schweiz zugelassen und erhältlich sind.* Du kannst auch manuell Mediakmente hinzufügen.</p>
+      </details>
+      <details class="card">
+        <summary><strong>Kommt eine iOS‑Version?</strong></summary>
+        <p>Geplant. Fokus zuerst Android. Infos hier auf der Seite.</p>
+      </details>
+    </section>
+
+    <section id="contact" class="anchor">
+      <h2>Kontakt</h2>
+      <p>Fragen, Feedback, Bug‑Report? Schreib mir: <a href="mailto:PillTrackADHSadhs@gmail.com">pilltrackadhs@gmail.com</a></p>
+    </section>
+
+    <section id="imprint" class="anchor">
+      <h2>Impressum &amp; Recht</h2>
+      <p class="small">
+        Verantwortlich: Thomas Schwarz, Graz, Österreich. <br/>
+        Keine medizinische Beratung. Nutze die App nur ergänzend zu professioneller Behandlung. <br/>
+        © 2025 PillTrackADHS.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container small">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+        <p>© 2025 PillTrackADHS • <a href="#privacy">Datenschutz</a> • <a href="#imprint">Impressum</a></p>
+        <p><a href="#top">Nach oben ↑</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const y = new Date().getFullYear();
+    document.getElementById('year').textContent = y;
+    document.getElementById('year2').textContent = y;
+  </script>
+</body>
+</html>
